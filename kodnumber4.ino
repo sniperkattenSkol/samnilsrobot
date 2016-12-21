@@ -1,5 +1,4 @@
 #include <Servo.h>
-
 Servo servoLeft;                                                                          //Sätter en Servo till servoLeft
 Servo servoRight;                                                                         //Sätter en Servo till servoRight
 int adPin = 3;                                               
@@ -43,34 +42,56 @@ int irDetect(int irLedPin, int irReceiverPin, long frequency){                  
 
 void setup() {                                                                            // Gör så att pin 7 och 10 att 
   servAT();
-  pinMode(10,INPUT);                                                     
-  pinMode(7,INPUT);                                                      
+  pinMode(4,INPUT);                                                     
+  pinMode(7,INPUT);    
+                                 
 }
 
-
-void loop() {                                                                       //huvud itterationens
-int leftIR = irDetect(9, 10, 38000);                                                //till delar variabeln LeftIr värdet från metoden irDetect
-int rightIR = irDetect(2, 3, 38000);                                                                              
+void loop() {                                                                        //huvud itterationen                   
+byte whiskL = digitalRead(4);
+byte whiskR = digitalRead(7);
+//int leftIR = irDetect(9, 10, 38000);                                                //till delar variabeln LeftIr värdet från metoden irDetect
+//int rightIR = irDetect(2, 3, 38000);                                                                              
 float notIMP = (analogRead(adPin)) * 5.0 / 1024.0;                                 //Värdet från ljus sensorn tilldelas till ett notIMP
-   if (notIMP < 0.3){                                                              //Om det är nog mörkt så åkter den bakåt och sedan vänster
-    goBack(300);
-    goLeft(200);
-    }else if(leftIR == 0) {                                                        //Om vänstra ögat känner av något så åker den höger
+  if (notIMP < 0.2){                                                              //Om det är nog mörkt så åkter den bakåt och sedan vänster
+    goBack(1500);
+    goLeft(850);
+    } else if((whiskL == 0) && (whiskR == 0)) {                          // om båda morrhåren gör kontakt så åker den bakåt och sedan svänger den vänster. 
+    goBack(5000);
+    goLeft(400);
+  } else if (whiskL == 0){                                               // Om det vänstra morrhåret gör kontakt så backar roboten bakåt och svänger höger
+    goBack(1000);
+    goRight(400);
+    } else if (whiskR == 0){                                             // Om det högra morrhåret gör kontakt så backar roboten bakåt och svänger vänster.
+     goBack(1000);
+     goLeft(400); 
+    } else {                                                             // Om inget är true så åker den framåt.
+      goForward(20);
+      
+    }
+  
+  
+  
+  /*
+
+/*else if(leftIR == 0) {                                                        //Om vänstra ögat känner av något så åker den höger
+    goRight(150); 
+  } else if(rightIR == 0) {                                                        //Samma som den vänstra fast den åker åt vänster
+    goLeft(150);
+    } else {                                                                        //Annars åker roboten framåt. 
+        goForward(20);
+      }/*else if(leftIR == 0) {                                                        //Om vänstra ögat känner av något så åker den höger
     goRight(150); 
   } else if(rightIR == 0) {                                                        //Samma som den vänstra fast den åker åt vänster
     goLeft(150);
     } else {                                                                        //Annars åker roboten framåt. 
         goForward(20);
       }
-  
-  
-  //Gamal kod
-  
-  /*
+   
   byte whiskL = digitalRead(5);
   byte whiskR = digitalRead(7); 
  
-    if((whiskL == 0) && (whiskR == 0)) {
+    else if((whiskL == 0) && (whiskR == 0)) {
     goBack(2000);
     goLeft(250);
   } else if (whiskL == 0){                                               // Om det vänstra morrhåret gör kontakt så backar roboten bakåt och svänger höger
